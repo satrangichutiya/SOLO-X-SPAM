@@ -9,7 +9,7 @@ from config import X1, OWNER_ID, SUDO_USERS, HEROKU_APP_NAME, HEROKU_API_KEY, CM
 async def ping(e):
     if e.sender_id in SUDO_USERS:
         start = datetime.now()
-        jarvis = await e.reply(f"ᴥ︎︎︎ 𝐉𝐀𝐑𝐕𝐈𝐒 ✔︎")
+        jarvis = await e.reply(f"❄️")
         end = datetime.now()
         mp = (end - start).microseconds / 1000
         await jarvis.edit(f"[𝐉𝐀𝐑𝐕𝐈𝐒 𝐈𝐒 𝐑𝐄𝐀𝐃𝐘 𝐓𝐎  ](https://t.me/JARVIS_V_SUPPORT)[𝐅𝐔𝐂𝐊 𝐇𝐀𝐓𝐄𝐑𝐒 🥀](https://t.me/Dora_Hub)🤖\n» `{mp} ᴍꜱ`")
