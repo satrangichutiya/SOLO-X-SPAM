@@ -7,37 +7,40 @@ import urllib3
 from pathlib import Path
 from config import X1
 
-# Configure logging
-logging.basicConfig(
-    format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
-    level=logging.WARNING
-)
+# Constants
+MODULES_PATH = "JARVIS/modules"
+LOG_FORMAT = '[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s'
+LOG_LEVEL = logging.WARNING
 
-# Disable insecure request warnings
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+def configure_logging():
+    logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL)
 
-def load_plugins(plugin_name):
-    path = Path(f"JARVIS/modules/{plugin_name}.py")
-    spec = importlib.util.spec_from_file_location(f"JARVIS.modules.{plugin_name}", path)
-    load = importlib.util.module_from_spec(spec)
-    load.logger = logging.getLogger(plugin_name)
-    spec.loader.exec_module(load)
-    sys.modules[f"JARVIS.modules.{plugin_name}"] = load
+def disable_insecure_warnings():
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+def load_plugin_module(plugin_name):
+    path = Path(f"{MODULES_PATH}/{plugin_name}.py")
+    spec = importlib.util.spec_from_file_location(f"{MODULES_PATH}.{plugin_name}", path)
+    module = importlib.util.module_from_spec(spec)
+    module.logger = logging.getLogger(plugin_name)
+    spec.loader.exec_module(module)
+    sys.modules[f"{MODULES_PATH}.{plugin_name}"] = module
     print(f"FRIDAY has Imported {plugin_name}")
 
-# Load all plugin modules
-files = glob.glob("JARVIS/modules/*.py")
-for name in files:
-    with open(name) as file:
-        patt = Path(file.name)
-        plugin_name = patt.stem
-        load_plugins(plugin_name)
-
-print("\nThe Bot Has Been Deployed Successfully. 👻\nMy Master ---> @JARVIS_V2")
+def load_all_plugins():
+    files = glob.glob(f"{MODULES_PATH}/*.py")
+    for name in files:
+        with open(name) as file:
+            plugin_name = Path(file.name).stem
+            load_plugin_module(plugin_name)
 
 async def main():
     await X1.run_until_disconnected()
 
-# Start the asyncio event loop
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+if __name__ == "__main__":
+    configure_logging()
+    disable_insecure_warnings()
+    load_all_plugins()
+    print("\nThe Bot Has Been Deployed Successfully. 👻\nMy Master ---> @JARVIS_V2")
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
