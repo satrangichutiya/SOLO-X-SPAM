@@ -4,14 +4,14 @@ from telethon import events, functions, types
 from JARVIS.data import GROUP, PORMS
 from config import X1, SUDO_USERS, CMD_HNDLR as hl
 
-async def gifspam(e, smex):
+async def gifspam(event, message):
     try:
-        await e.client(
+        await event.client(
             functions.messages.SaveGifRequest(
                 id=types.InputDocument(
-                    id=sandy.media.document.id,
-                    access_hash=smex.media.document.access_hash,
-                    file_reference=smex.media.document.file_reference,
+                    id=message.media.document.id,
+                    access_hash=message.media.document.access_hash,
+                    file_reference=message.media.document.file_reference,
                 ),
                 unsave=True,
             )
@@ -19,30 +19,33 @@ async def gifspam(e, smex):
     except Exception:
         pass
 
+async def send_messages(event, message, count):
+    for _ in range(count):
+        if event.reply_to_msg_id:
+            await event.reply(message)
+        else:
+            await event.client.send_message(event.chat_id, message)
+        await asyncio.sleep(0.2)
+
+async def send_media(event, message, count):
+    for _ in range(count):
+        message = await event.client.send_file(event.chat_id, message, caption=message.text)
+        await gifspam(event, message)
+        await asyncio.sleep(0.2)
+
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sspam(?: |$)(.*)" % hl))
-async def spam(event: events):
+async def spam(event):
     if event.sender_id in SUDO_USERS:
-        jarvis = event.text.split(" ", 2)
-        mk = await event.get_reply_message()
+        command = event.text.split(" ", 2)
+        reply_message = await event.get_reply_message()
         try:
-            if len(jarvis) == 3:
-                message = jarvis[2]
-                for _ in range(int(jarvis[1])):
-                    if event.reply_to_msg_id:
-                        await mk.reply(message)
-                    else:
-                        await event.client.send_message(event.chat_id, message)
-                    await asyncio.sleep(0.2)
-            elif event.reply_to_msg_id and mk.media:
-                for _ in range(int(jarvis[1])):
-                    mk = await event.client.send_file(event.chat_id, mk, caption=mk.text)
-                    await gifspam(event, mk) 
-                    await asyncio.sleep(0.2)  
-            elif event.reply_to_msg_id and mk.text:
-                message = mk.text
-                for _ in range(int(jarvis[1])):
-                    await event.client.send_message(event.chat_id, message)
-                    await asyncio.sleep(0.2)
+            count = int(command[1])
+            if len(command) == 3:
+                await send_messages(event, command[2], count)
+            elif reply_message.media:
+                await send_media(event, reply_message, count)
+            elif reply_message.text:
+                await send_messages(event, reply_message.text, count)
             else:
                 await event.reply(f"😈 **Usage:**\n  » {hl}spam 04 jarvis\n  » {hl}spam 04 <ʀᴇᴘʟʏ ᴛᴏ ᴛᴇxᴛ>\n\n**To do spam with replying to a user:**\n  » {hl}spam 04 jarvis <ʀᴇᴘʟʏ ᴛᴏ ᴜꜱᴇʀ>")
         except (IndexError, ValueError):
@@ -57,29 +60,10 @@ async def pspam(event):
             await event.reply("» YE GROUP JARVIS KE UNDER MAI HAI ISLEYE ISME PSPAM NHI HOGA...")
         else:
             try:
-                counter = int(event.text.split(" ", 2)[1])
-                porrn = choice(PORMS)
-                for _ in range(counter):
-                    alt = await event.client.send_file(event.chat_id, porrn)
-                    await gifspam(event, alt) 
-                    await asyncio.sleep(0.2)
+                count = int(event.text.split(" ", 2)[1])
+                porn = choice(PORMS)
+                await send_media(event, porn, count)
             except (IndexError, ValueError):
                 await event.reply(f"🔞 **Usage:**  {hl}pspam 04")
             except Exception as e:
                 print(e)
-
-@X1.on(events.NewMessage(incoming=True, pattern=r"\%shang(?: |$)(.*)" % hl))
-async def hang(e):
-    if e.sender_id in SUDO_USERS:
-        if e.chat_id in GROUP:
-            await e.reply("» YE GROUP JARVIS KE UNDER MAI HAI ISLEYE ISME HANG NHI HOGA..")
-        else:
-            try:
-                counter = int(e.text.split(" ", 2)[1])
-                hang_text = "JARVIS OP 😈꙰꙰꙰꙰꙰꙰⃟꙰⃟꙰⃟꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰꙰⃟꙰⃟꙰⃟꙰"
-                await e.respond(hang_text)
-                await asyncio.sleep(0.3)
-            except (IndexError, ValueError):
-                await e.reply(f"😈 **Usage:** {hl}hang 10")
-            except Exception as exc:
-                print(exc)
