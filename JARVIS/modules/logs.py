@@ -6,43 +6,48 @@ from datetime import datetime
 from telethon import events
 from telethon.errors import ForbiddenError
 
+async def fetch_heroku_logs(ANNIE):
+    if (HEROKU_APP_NAME is None) or (HEROKU_API_KEY is None):
+        await ANNIE.reply(
+            "First Set These Vars In Heroku: `HEROKU_API_KEY` And `HEROKU_APP_NAME`.",
+        )
+        return None
 
+    try:
+        Heroku = heroku3.from_key(HEROKU_API_KEY)
+        app = Heroku.app(HEROKU_APP_NAME)
+    except BaseException:
+        await ANNIE.reply(
+            "Make Sure Your Heroku API Key & App Name Are Configured Correctly In Heroku."
+        )
+        return None
 
-# Logs command handler
+    return app.get_log()
+
+async def write_logs_to_file(logs):
+    with open("JARVISlogs.txt", "w") as logfile:
+        logfile.write("⚡ JARVISBOTS ⚡ [ Bot Logs ]\n\n" + logs)
+
+async def send_logs_file(ANNIE, ms):
+    try:
+        await X1.send_file(ANNIE.chat_id, "JARVISlogs.txt", caption=f"⚡ **JARVIS BOTS LOGS** ⚡\n  » **Time Taken:** `{ms} seconds`")
+    except Exception as e:
+        await ANNIE.reply(f"An Exception Occurred!\n\n**ERROR:** {str(e)}")
+
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%slogs(?: |$)(.*)" % hl))
 async def logs(ANNIE):
     if ANNIE.sender_id == OWNER_ID:
-        if (HEROKU_APP_NAME is None) or (HEROKU_API_KEY is None):
-            await ANNIE.reply(
-                "First Set These Vars In Heroku: `HEROKU_API_KEY` And `HEROKU_APP_NAME`.",
-            )
-            return
-
-        try:
-            Heroku = heroku3.from_key(HEROKU_API_KEY)
-            app = Heroku.app(HEROKU_APP_NAME)
-        except BaseException:
-            await ANNIE.reply(
-                "Make Sure Your Heroku API Key & App Name Are Configured Correctly In Heroku."
-            )
-            return
-
-        logs = app.get_log()
         start = datetime.now()
         fetch = await ANNIE.reply(f"__Fetching Logs...__")
+        logs = await fetch_heroku_logs(ANNIE)
 
-        with open("JARVISlogs.txt", "w") as logfile:
-            logfile.write("⚡ JARVISBOTS ⚡ [ Bot Logs ]\n\n" + logs)
-
-        end = datetime.now()
-        ms = (end - start).seconds
-        await asyncio.sleep(1)
-
-        try:
-            await X1.send_file(ANNIE.chat_id, "JARVISlogs.txt", caption=f"⚡ **JARVIS BOTS LOGS** ⚡\n  » **Time Taken:** `{ms} seconds`")
+        if logs is not None:
+            await write_logs_to_file(logs)
+            end = datetime.now()
+            ms = (end - start).seconds
+            await asyncio.sleep(1)
+            await send_logs_file(ANNIE, ms)
             await fetch.delete()
-        except Exception as e:
-            await fetch.edit(f"An Exception Occurred!\n\n**ERROR:** {str(e)}")
 
     elif ANNIE.sender_id in SUDO_USERS:
         await ANNIE.reply("» BSDK..ISKO SIRF OWNER USE KR SKTA HAI...")
