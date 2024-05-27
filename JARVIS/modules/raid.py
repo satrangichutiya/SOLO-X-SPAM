@@ -2,7 +2,7 @@ import asyncio
 from random import choice
 from telethon import events
 from config import X1, SUDO_USERS, OWNER_ID, CMD_HNDLR as hl
-from JARVIS.data import RAID, REPLYRAID, FRIDAY, MRAID, SRAID, QRAID, FRIDAY
+from JARVIS.data import RAID, REPLYRAID, FRIDAY, MRAID, SRAID, QRAID
 
 REPLY_RAID = []
 
@@ -48,35 +48,15 @@ async def rraid(event):
             await event.reply("» HAT GYA REPLY RAID !! ✅")
 
 @X1.on(events.NewMessage(incoming=True))
-async def _(event):
+async def reply_raid_handler(event):
     global REPLY_RAID
     check = f"{event.sender_id}_{event.chat_id}"
     if check in REPLY_RAID:
         await event.client.send_message(
             entity=event.chat_id,
-            message="""{}""".format(choice(REPLYRAID)),
+            message="{}".format(choice(REPLYRAID)),
             reply_to=event.message.id,
         )
-        await asyncio.sleep(0.1)
-
-
-async def get_entity_from_message(event):
-    text = event.text.split(" ", 2)
-    if len(text) >= 2:
-        return await event.client.get_entity(text[2])
-    elif event.reply_to_msg_id:
-        reply_message = await event.get_reply_message()
-        return await event.client.get_entity(reply_message.sender_id)
-    return None
-
-async def send_raid_message(event, raid_list, counter, entity):
-    first_name = entity.first_name
-    uid = entity.id
-    username = f"[{first_name}](tg://user?id={uid})"
-    for _ in range(counter):
-        reply = choice(raid_list)
-        caption = f"{username} {reply}"
-        await event.client.send_message(event.chat_id, caption)
         await asyncio.sleep(0.1)
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sdrraid(?: |$)(.*)" % hl))
