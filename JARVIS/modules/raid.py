@@ -17,17 +17,17 @@ async def get_user_entity(e):
 
 # Helper function to handle exceptions
 async def handle_exception(e, module_name):
-    await e.reply(f"𝗠𝗼𝗱𝘂𝗹𝗲 𝗡𝗮𝗺𝗲: {module_name}\n  » {hl}{module_name.lower()} <ᴄᴏᴜɴᴛ> <ᴜꜱᴇʀɴᴀᴍᴇ ᴏꜰ ᴜꜱᴇʀ>\n  » {hl}{module_name.lower()} <ᴄᴏᴜɴᴛ> <ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴜꜱᴇʀ>")
+    if not (e.reply_to_msg_id or len(e.text.split()) > 2):
+        await e.reply(f"𝗠𝗼𝗱𝘂𝗹𝗲 𝗡𝗮𝗺𝗲: {module_name}\n  » {hl}{module_name.lower()} <ᴄᴏᴜɴᴛ> <ᴜꜱᴇʀɴᴀᴍᴇ ᴏꜰ ᴜꜱᴇʀ>\n  » {hl}{module_name.lower()} <ᴄᴏᴜɴᴛ> <ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴜꜱᴇʀ>")
 
 # Function to execute raid
-async def execute_raid(e, uid, first_name, counter, raid_list, module_name):
+async def execute_raid(e, uid, first_name, counter, raid_list):
     username = f"[{first_name}](tg://user?id={uid})"
     for _ in range(counter):
         reply = choice(raid_list)
         caption = f"{username} {reply}"
         await e.client.send_message(e.chat_id, caption)
         await asyncio.sleep(0.1)
-    await handle_exception(e, module_name)
 
 # Event handler for different raid types
 async def raid_handler(e, raid_list, module_name):
@@ -45,7 +45,7 @@ async def raid_handler(e, raid_list, module_name):
                 elif uid in SUDO_USERS:
                     await e.reply("YE BHI JARVIS KA BACHA HAI ISPE RAID MAT MARO!...")
                 else:
-                    await execute_raid(e, uid, first_name, counter, raid_list, module_name)
+                    await execute_raid(e, uid, first_name, counter, raid_list)
             else:
                 await handle_exception(e, module_name)
         except (IndexError, ValueError, NameError):
