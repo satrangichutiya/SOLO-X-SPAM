@@ -1,6 +1,6 @@
 from telethon import events, Button
 
-from config import X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, SUDO_USERS, CMD_HNDLR as hl
+from config import X1, SUDO_USERS, CMD_HNDLR as hl
 
 
 HELP_STRING = f"★ ᴊᴀʀᴠɪs ʙᴏᴛs ʜᴇʟᴘ ᴍᴇɴᴜ ★\n\n» **ᴄʟɪᴄᴋ ᴏɴ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴꜱ ꜰᴏʀ ʜᴇʟᴘ**\n» **ᴅᴇᴠᴇʟᴏᴘᴇʀ: @JARVIS_V2**"
@@ -21,15 +21,6 @@ HELP_BUTTON = [
 
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%shelp(?: |$)(.*)" % hl))
-@X2.on(events.NewMessage(incoming=True, pattern=r"\%shelp(?: |$)(.*)" % hl))
-@X3.on(events.NewMessage(incoming=True, pattern=r"\%shelp(?: |$)(.*)" % hl))
-@X4.on(events.NewMessage(incoming=True, pattern=r"\%shelp(?: |$)(.*)" % hl))
-@X5.on(events.NewMessage(incoming=True, pattern=r"\%shelp(?: |$)(.*)" % hl))
-@X6.on(events.NewMessage(incoming=True, pattern=r"\%shelp(?: |$)(.*)" % hl))
-@X7.on(events.NewMessage(incoming=True, pattern=r"\%shelp(?: |$)(.*)" % hl))
-@X8.on(events.NewMessage(incoming=True, pattern=r"\%shelp(?: |$)(.*)" % hl))
-@X9.on(events.NewMessage(incoming=True, pattern=r"\%shelp(?: |$)(.*)" % hl))
-@X10.on(events.NewMessage(incoming=True, pattern=r"\%shelp(?: |$)(.*)" % hl))
 async def help(event):
     if event.sender_id in SUDO_USERS:
         try:
@@ -114,15 +105,6 @@ spam_msg = f"""
            
            
 @X1.on(events.CallbackQuery(pattern=r"help_back"))
-@X2.on(events.CallbackQuery(pattern=r"help_back"))
-@X3.on(events.CallbackQuery(pattern=r"help_back"))
-@X4.on(events.CallbackQuery(pattern=r"help_back"))
-@X5.on(events.CallbackQuery(pattern=r"help_back"))
-@X6.on(events.CallbackQuery(pattern=r"help_back"))
-@X7.on(events.CallbackQuery(pattern=r"help_back"))
-@X8.on(events.CallbackQuery(pattern=r"help_back"))
-@X9.on(events.CallbackQuery(pattern=r"help_back"))
-@X10.on(events.CallbackQuery(pattern=r"help_back"))
 async def helpback(event):
     if event.query.user_id in SUDO_USERS:    
         await event.edit(
@@ -146,15 +128,6 @@ async def helpback(event):
 
 
 @X1.on(events.CallbackQuery(pattern=r"spam"))
-@X2.on(events.CallbackQuery(pattern=r"spam"))
-@X3.on(events.CallbackQuery(pattern=r"spam"))
-@X4.on(events.CallbackQuery(pattern=r"spam"))
-@X5.on(events.CallbackQuery(pattern=r"spam"))
-@X6.on(events.CallbackQuery(pattern=r"spam"))
-@X7.on(events.CallbackQuery(pattern=r"spam"))
-@X8.on(events.CallbackQuery(pattern=r"spam"))
-@X9.on(events.CallbackQuery(pattern=r"spam"))
-@X10.on(events.CallbackQuery(pattern=r"spam"))
 async def help_spam(event):
     if event.query.user_id in SUDO_USERS:    
         await event.edit(spam_msg,
@@ -165,15 +138,6 @@ async def help_spam(event):
 
 
 @X1.on(events.CallbackQuery(pattern=r"raid"))
-@X2.on(events.CallbackQuery(pattern=r"raid"))
-@X3.on(events.CallbackQuery(pattern=r"raid"))
-@X4.on(events.CallbackQuery(pattern=r"raid"))
-@X5.on(events.CallbackQuery(pattern=r"raid"))
-@X6.on(events.CallbackQuery(pattern=r"raid"))
-@X7.on(events.CallbackQuery(pattern=r"raid"))
-@X8.on(events.CallbackQuery(pattern=r"raid"))
-@X9.on(events.CallbackQuery(pattern=r"raid"))
-@X10.on(events.CallbackQuery(pattern=r"raid"))
 async def help_raid(event):
     if event.query.user_id in SUDO_USERS:
         await event.edit(raid_msg,
@@ -184,15 +148,6 @@ async def help_raid(event):
 
 
 @X1.on(events.CallbackQuery(pattern=r"extra"))
-@X2.on(events.CallbackQuery(pattern=r"extra"))
-@X3.on(events.CallbackQuery(pattern=r"extra"))
-@X4.on(events.CallbackQuery(pattern=r"extra"))
-@X5.on(events.CallbackQuery(pattern=r"extra"))
-@X6.on(events.CallbackQuery(pattern=r"extra"))
-@X7.on(events.CallbackQuery(pattern=r"extra"))
-@X8.on(events.CallbackQuery(pattern=r"extra"))
-@X9.on(events.CallbackQuery(pattern=r"extra"))
-@X10.on(events.CallbackQuery(pattern=r"extra"))
 async def help_extra(event):
     if event.query.user_id in SUDO_USERS:
         await event.edit(extra_msg,
