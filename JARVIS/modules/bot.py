@@ -89,55 +89,51 @@ async def getsudo(event):
     else:
         await event.reply("You already have sudo privileges.")
 
-@X1.on(events.NewMessage(incoming=True, pattern=r"\%sverify(?: |$)(.*)" % hl))
-async def verify(event):
-    verified = True
-    for channel in REQUIRED_CHANNELS:
-        try:
-            participants = await X1(GetParticipantsRequest(
-                channel=channel,
-                filter=ChannelParticipantsSearch(''),
-                offset=0,
-                limit=100,
-                hash=0
-            ))
-            if not any(participant.id == event.sender_id for participant in participants.users):
-                verified = False
-                break
-        except Exception as ex:
-            await event.reply(f"Error checking membership for {channel}: {ex}")
-            return
-
-    if verified:
-        await manage_sudo_users(event, add=True)
+@X1.on(events.CallbackQuery(data=b"verify_membership"))
+async def verify_membership(event):
+    all_memberships = await asyncio.gather(
+        *[is_member(X1, event.sender_id, channel) for channel in REQUIRED_CHANNELS]
+    )
+    if all(all_memberships):
+        await manage_sudo_users(event.sender_id, add=True)
         await event.reply("You have been verified and given sudo access!")
     else:
         await prompt_join_channels(event)
 
-async def manage_sudo_users(event, add):
+async def manage_sudo_users(user_id, add):
     Heroku = heroku3.from_key(HEROKU_API_KEY)
-    sudousers = getenv("SUDO_USERS", default=None)
-    target = event.sender_id
+    sudousers = getenv("SUDO_USERS", default="")
     if HEROKU_APP_NAME is not None:
         app = Heroku.app(HEROKU_APP_NAME)
     else:
-        await event.reply("`[HEROKU]:" "\nPlease Setup Your` **HEROKU_APP_NAME**")
+        print("`[HEROKU]: Please Setup Your HEROKU_APP_NAME`")
         return
     heroku_var = app.config()
     if add:
-        if str(target) in sudousers:
-            await event.reply(f"YE BHI JARVIS KA HI BACHA HAI.. !!")
+        if str(user_id) in sudousers:
+            print("User is already in the sudo list.")
         else:
-            newsudo = f"{sudousers} {target}" if sudousers else f"{target}"
-            await event.reply(f"» **ɴᴇᴡ ꜱᴜᴅᴏ ᴜꜱᴇʀ**: `{target}`\n» `ADD KAR DIYE HAI SUDO..BOT RESTART HO RHA HAI`")
+            newsudo = f"{sudousers} {user_id}".strip()
             heroku_var["SUDO_USERS"] = newsudo
+            print("User added to the sudo list.")
+            # Restart the bot to apply the changes
+            await restart_bot()
     else:
-        if str(target) not in sudousers:
-            await event.reply("User is not in the sudo list.")
+        if str(user_id) not in sudousers:
+            print("User is not in the sudo list.")
         else:
-            new_sudo_users = " ".join([user for user in sudousers.split() if user != str(target)])
-            await event.reply(f"Removed sudo user: `{target}`")
+            new_sudo_users = " ".join([user for user in sudousers.split() if user != str(user_id)])
             heroku_var["SUDO_USERS"] = new_sudo_users
+            print("User removed from the sudo list.")
+            # Restart the bot to apply the changes
+            await restart_bot()
+
+async def restart_bot():
+    try:
+        await X1.disconnect()
+    except Exception as e:
+        print(f"Error while disconnecting: {e}")
+    execl(sys.executable, sys.executable, *sys.argv)
 
 async def manage_multiple_sudo_users(event):
     Heroku = heroku3.from_key(HEROKU_API_KEY)
