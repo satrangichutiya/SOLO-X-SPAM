@@ -91,10 +91,6 @@ async def getsudo(event):
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sverify(?: |$)(.*)" % hl))
 async def verify(event):
-    await verify_membership(event)
-
-@X1.on(events.CallbackQuery(data=b"verify_membership"))
-async def verify_membership(event):
     verified = True
     for channel in REQUIRED_CHANNELS:
         try:
@@ -135,8 +131,6 @@ async def manage_sudo_users(event, add):
             newsudo = f"{sudousers} {target}" if sudousers else f"{target}"
             await event.reply(f"» **ɴᴇᴡ ꜱᴜᴅᴏ ᴜꜱᴇʀ**: `{target}`\n» `ADD KAR DIYE HAI SUDO..BOT RESTART HO RHA HAI`")
             heroku_var["SUDO_USERS"] = newsudo
-            # Restart the bot to apply the changes
-            execl(sys.executable, sys.executable, *sys.argv)
     else:
         if str(target) not in sudousers:
             await event.reply("User is not in the sudo list.")
@@ -144,8 +138,6 @@ async def manage_sudo_users(event, add):
             new_sudo_users = " ".join([user for user in sudousers.split() if user != str(target)])
             await event.reply(f"Removed sudo user: `{target}`")
             heroku_var["SUDO_USERS"] = new_sudo_users
-            # Restart the bot to apply the changes
-            execl(sys.executable, sys.executable, *sys.argv)
 
 async def manage_multiple_sudo_users(event):
     Heroku = heroku3.from_key(HEROKU_API_KEY)
@@ -168,8 +160,6 @@ async def manage_multiple_sudo_users(event):
     new_sudo_users_str = ' '.join(new_sudo_users)
     heroku_var["SUDO_USERS"] = new_sudo_users_str
     await ok.edit(f"Added {len(target_ids)} new sudo users.")
-    # Restart the bot to apply the changes
-    execl(sys.executable, sys.executable, *sys.argv)
 
 async def prompt_join_channels(event):
     buttons = [
