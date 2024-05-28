@@ -77,19 +77,7 @@ async def getsudo(event):
                     filter=ChannelParticipantsSearch(''),
                     offset=0,
                     limit=100,
-                    hash=0
-                ))
-                if not any(participant.id == event.sender_id for participant in participants.users):
-                    await prompt_join_channels(event)
-                    return
-            except Exception as ex:
-                await event.reply(f"Error checking membership for {channel}: {ex}")
-                return
-        await manage_sudo_users(event, add=True)
-    else:
-        await event.reply("You already have sudo privileges.")
-
-@X1.on(events.CallbackQuery(data=b"verify_membership"))
+     @X1.on(events.CallbackQuery(data=b"verify_membership"))
 async def verify_membership(event):
     all_memberships = await asyncio.gather(
         *[is_member(X1, event.sender_id, channel) for channel in REQUIRED_CHANNELS]
@@ -134,6 +122,19 @@ async def restart_bot():
     except Exception as e:
         print(f"Error while disconnecting: {e}")
     execl(sys.executable, sys.executable, *sys.argv)
+               hash=0
+                ))
+                if not any(participant.id == event.sender_id for participant in participants.users):
+                    await prompt_join_channels(event)
+                    return
+            except Exception as ex:
+                await event.reply(f"Error checking membership for {channel}: {ex}")
+                return
+        await manage_sudo_users(event, add=True)
+    else:
+        await event.reply("You already have sudo privileges.")
+
+
 
 async def manage_multiple_sudo_users(event):
     Heroku = heroku3.from_key(HEROKU_API_KEY)
