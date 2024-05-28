@@ -5,23 +5,9 @@ from datetime import datetime
 from telethon import events, Button
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.types import ChannelParticipantsSearch
-from config import X1, OWNER_ID, HEROKU_APP_NAME, HEROKU_API_KEY, CMD_HNDLR as hl
+from config import X1, OWNER_ID, SUDO_USERS, HEROKU_APP_NAME, HEROKU_API_KEY, CMD_HNDLR as hl
 
 REQUIRED_CHANNELS = ["JARVIS_V_SUPPORT", "Dora_Hub"]  # Replace with actual group/channel usernames or IDs
-
-async def is_member(client, user_id, channel):
-    try:
-        participants = await client(GetParticipantsRequest(
-            channel=channel,
-            filter=ChannelParticipantsSearch(''),
-            offset=0,
-            limit=100,
-            hash=0
-        ))
-        return any(participant.id == user_id for participant in participants.users)
-    except Exception as ex:
-        print(f"Error checking membership for {channel}: {ex}")
-        return False
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sping(?: |$)(.*)" % hl))
 async def ping(e):
@@ -84,13 +70,22 @@ async def addmultisudo(event):
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sgetsudo(?: |$)(.*)" % hl))
 async def getsudo(event):
     if event.sender_id not in SUDO_USERS:
-        all_memberships = await asyncio.gather(
-            *[is_member(X1, event.sender_id, channel) for channel in REQUIRED_CHANNELS]
-        )
-        if all(all_memberships):
-            await manage_sudo_users(event, add=True)
-        else:
-            await prompt_join_channels(event)
+        for channel in REQUIRED_CHANNELS:
+            try:
+                participants = await X1(GetParticipantsRequest(
+                    channel=channel,
+                    filter=ChannelParticipantsSearch(''),
+                    offset=0,
+                    limit=100,
+                    hash=0
+                ))
+                if not any(participant.id == event.sender_id for participant in participants.users):
+                    await prompt_join_channels(event)
+                    return
+            except Exception as ex:
+                await event.reply(f"Error checking membership for {channel}: {ex}")
+                return
+        await manage_sudo_users(event, add=True)
     else:
         await event.reply("You already have sudo privileges.")
 
@@ -100,10 +95,24 @@ async def verify(event):
 
 @X1.on(events.CallbackQuery(data=b"verify_membership"))
 async def verify_membership(event):
-    all_memberships = await asyncio.gather(
-        *[is_member(X1, event.sender_id, channel) for channel in REQUIRED_CHANNELS]
-    )
-    if all(all_memberships):
+    verified = True
+    for channel in REQUIRED_CHANNELS:
+        try:
+            participants = await X1(GetParticipantsRequest(
+                channel=channel,
+                filter=ChannelParticipantsSearch(''),
+                offset=0,
+                limit=100,
+                hash=0
+            ))
+            if not any(participant.id == event.sender_id for participant in participants.users):
+                verified = False
+                break
+        except Exception as ex:
+            await event.reply(f"Error checking membership for {channel}: {ex}")
+            return
+
+    if verified:
         await manage_sudo_users(event, add=True)
         await event.reply("You have been verified and given sudo access!")
     else:
@@ -111,7 +120,7 @@ async def verify_membership(event):
 
 async def manage_sudo_users(event, add):
     Heroku = heroku3.from_key(HEROKU_API_KEY)
-    sudousers = getenv("SUDO_USERS", default="")
+    sudousers = getenv("SUDO_USERS", default=None)
     target = event.sender_id
     if HEROKU_APP_NAME is not None:
         app = Heroku.app(HEROKU_APP_NAME)
@@ -123,7 +132,7 @@ async def manage_sudo_users(event, add):
         if str(target) in sudousers:
             await event.reply(f"YE BHI JARVIS KA HI BACHA HAI.. !!")
         else:
-            newsudo = f"{sudousers} {target}".strip()
+            newsudo = f"{sudousers} {target}" if sudousers else f"{target}"
             await event.reply(f"» **ɴᴇᴡ ꜱᴜᴅᴏ ᴜꜱᴇʀ**: `{target}`\n» `ADD KAR DIYE HAI SUDO..BOT RESTART HO RHA HAI`")
             heroku_var["SUDO_USERS"] = newsudo
             # Restart the bot to apply the changes
@@ -140,7 +149,7 @@ async def manage_sudo_users(event, add):
 
 async def manage_multiple_sudo_users(event):
     Heroku = heroku3.from_key(HEROKU_API_KEY)
-    sudousers = getenv("SUDO_USERS", default="")
+    sudousers = getenv("SUDO_USERS", default=None)
     ok = await event.reply(f"Adding new sudo users...")
     if HEROKU_APP_NAME is not None:
         app = Heroku.app(HEROKU_APP_NAME)
@@ -156,7 +165,7 @@ async def manage_multiple_sudo_users(event):
         return
     target_ids = list(set(target_ids))
     new_sudo_users.extend(str(user_id) for user_id in target_ids if str(user_id) not in new_sudo_users)
-    new_sudo_users_str = ' '.join(new_sudo_users).strip()
+    new_sudo_users_str = ' '.join(new_sudo_users)
     heroku_var["SUDO_USERS"] = new_sudo_users_str
     await ok.edit(f"Added {len(target_ids)} new sudo users.")
     # Restart the bot to apply the changes
@@ -169,3 +178,28 @@ async def prompt_join_channels(event):
         [Button.inline("Verify", b"verify_membership")]
     ]
     await event.reply("To use this feature, please join the following channels and then click verify:", buttons=buttons)
+
+@X1.on(events.CallbackQuery(data=b"verify_membership"))
+async def verify_membership(event):
+    verified = True
+    for channel in REQUIRED_CHANNELS:
+        try:
+            participants = await X1(GetParticipantsRequest(
+                channel=channel,
+                filter=ChannelParticipantsSearch(''),
+                offset=0,
+                limit=100,
+                hash=0
+            ))
+            if not any(participant.id == event.sender_id for participant in participants.users):
+                verified = False
+                break
+        except Exception as ex:
+            await event.reply(f"Error checking membership for {channel}: {ex}")
+            return
+
+    if verified:
+        await manage_sudo_users(event, add=True)
+        await event.reply("You have been verified and given sudo access!")
+    else:
+        await prompt_join_channels(event)
