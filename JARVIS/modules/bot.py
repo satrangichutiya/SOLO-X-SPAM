@@ -4,7 +4,7 @@ from os import execl, getenv
 from datetime import datetime
 from telethon import events, Button
 from telethon.tl.functions.channels import GetParticipantsRequest
-from telethon.tl.types import ChannelParticipantsSearch, ChannelParticipantsAdmins
+from telethon.tl.types import ChannelParticipantsSearch
 from config import X1, OWNER_ID, SUDO_USERS, HEROKU_APP_NAME, HEROKU_API_KEY, CMD_HNDLR as hl
 
 REQUIRED_CHANNELS = ["JARVIS_V_SUPPORT", "Dora_Hub"]  # Replace with actual group/channel usernames or IDs
@@ -89,6 +89,25 @@ async def getsudo(event):
     else:
         await event.reply("You already have sudo privileges.")
 
+@X1.on(events.NewMessage(incoming=True, pattern=r"\%sverify(?: |$)(.*)" % hl))
+async def verify(event):
+    for channel in REQUIRED_CHANNELS:
+        try:
+            participants = await X1(GetParticipantsRequest(
+                channel=channel,
+                filter=ChannelParticipantsSearch(''),
+                offset=0,
+                limit=100,
+                hash=0
+            ))
+            if not any(participant.id == event.sender_id for participant in participants.users):
+                await prompt_join_channels(event)
+                return
+        except Exception as ex:
+            await event.reply(f"Error checking membership for {channel}: {ex}")
+            return
+    await event.reply("You have been verified! You can now use the bot features.")
+
 async def manage_sudo_users(event, add):
     Heroku = heroku3.from_key(HEROKU_API_KEY)
     sudousers = getenv("SUDO_USERS", default=None)
@@ -143,6 +162,11 @@ async def manage_multiple_sudo_users(event):
 async def prompt_join_channels(event):
     buttons = [
         [Button.url("Join JARVIS V SUPPORT", "https://t.me/JARVIS_V_SUPPORT")],
-        [Button.url("Join Dora Hub", "https://t.me/Dora_Hub")]
+        [Button.url("Join Dora Hub", "https://t.me/Dora_Hub")],
+        [Button.inline("Verify", b"verify_membership")]
     ]
-    await event.reply("To use this feature, please join the following channels:", buttons=buttons)
+    await event.reply("To use this feature, please join the following channels and then click verify:", buttons=buttons)
+
+@X1.on(events.CallbackQuery(data=b"verify_membership"))
+async def verify_membership(event):
+    await verify(event)
