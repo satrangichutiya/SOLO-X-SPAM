@@ -3,7 +3,8 @@ import heroku3
 from os import execl, getenv
 from datetime import datetime
 from telethon import events, Button
-from telethon.tl.types import ChannelParticipantsSearch
+from telethon.tl.functions.channels import GetParticipantsRequest
+from telethon.tl.types import ChannelParticipantsSearch, ChannelParticipantsAdmins
 from config import X1, OWNER_ID, SUDO_USERS, HEROKU_APP_NAME, HEROKU_API_KEY, CMD_HNDLR as hl
 
 REQUIRED_CHANNELS = ["JARVIS_V_SUPPORT", "Dora_Hub"]  # Replace with actual group/channel usernames or IDs
@@ -71,8 +72,14 @@ async def getsudo(event):
     if event.sender_id not in SUDO_USERS:
         for channel in REQUIRED_CHANNELS:
             try:
-                participants = await X1.get_participants(channel, search=ChannelParticipantsSearch(""))
-                if not any(participant.id == event.sender_id for participant in participants):
+                participants = await X1(GetParticipantsRequest(
+                    channel=channel,
+                    filter=ChannelParticipantsSearch(''),
+                    offset=0,
+                    limit=100,
+                    hash=0
+                ))
+                if not any(participant.id == event.sender_id for participant in participants.users):
                     await prompt_join_channels(event)
                     return
             except Exception as ex:
