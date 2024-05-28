@@ -3,6 +3,7 @@ import heroku3
 from os import execl, getenv
 from datetime import datetime
 from telethon import events, Button
+from telethon.tl.types import ChannelParticipantsSearch
 from config import X1, OWNER_ID, SUDO_USERS, HEROKU_APP_NAME, HEROKU_API_KEY, CMD_HNDLR as hl
 
 REQUIRED_CHANNELS = ["JARVIS_V_SUPPORT", "Dora_Hub"]  # Replace with actual group/channel usernames or IDs
@@ -54,7 +55,7 @@ async def show_sudo_users(event):
             sudo_users_list += f"- {user_id}\n"
         await event.reply(sudo_users_list)
     else:
-        await event.reply("Only Jarvis view the sudo users list.")
+        await event.reply("Only Jarvis can view the sudo users list.")
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%saddmultisudo(?: |$)(.*)" % hl))
 async def addmultisudo(event):
@@ -70,8 +71,8 @@ async def getsudo(event):
     if event.sender_id not in SUDO_USERS:
         for channel in REQUIRED_CHANNELS:
             try:
-                participant = await X1.get_participant(channel, event.sender_id)
-                if not participant:
+                participants = await X1.get_participants(channel, search=ChannelParticipantsSearch(""))
+                if not any(participant.id == event.sender_id for participant in participants):
                     await prompt_join_channels(event)
                     return
             except Exception as ex:
