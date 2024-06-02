@@ -2,9 +2,9 @@ from telethon import events, Button
 from config import X1, SUDO_USERS, CMD_HNDLR as hl
 
 HELP_STRING = (
-    "★ ᴊᴀʀᴠɪs ʙᴏᴛs ʜᴇʟᴘ ᴍᴇɴᴜ ★\n\n"
-    "» **ᴄʟɪᴄᴋ ᴏɴ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴꜱ ꜰᴏʀ ʜᴇʟᴘ**\n"
-    "» **ᴅᴇᴠᴇʟᴏᴘᴇʀ: @JARVIS_V2**"
+    "**𖤍 ᴊᴀʀᴠɪs sᴘᴀᴍ ʜᴇʟᴘ ᴍᴇɴᴜ 𖤍**\n\n"
+    "» ᴄʟɪᴄᴋ ᴏɴ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴꜱ ꜰᴏʀ ʜᴇʟᴘ\n"
+    "» **ᴅᴇᴠᴇʟᴏᴘᴇʀ**: @JARVIS_V2"
 )
 
 HELP_BUTTONS = [
@@ -16,18 +16,18 @@ HELP_BUTTONS = [
 
 EXTRA_MSG = (
     f"**» ᴇxᴛʀᴀ ᴄᴏᴍᴍᴀɴᴅꜱ:**\n\n"
-    f"𝗨𝘀𝗲𝗿𝗕𝗼𝘁: **ᴜꜱᴇʀʙᴏᴛ ᴄᴍᴅꜱ**\n"
+    f"𝗢𝘄𝗻𝗲𝗿: **ᴏᴡɴᴇʀ ᴄᴍᴅꜱ**\n"
     f"  1) {hl}ping\n"
     f"  2) {hl}reboot\n"
-    f"  3) {hl}sudo <reply to user>  --> Owner Cmd\n"
-    f"  4) {hl}logs --> Owner Cmd\n\n"
+    f"  3) {hl}sudo <reply to user>  ➪ Owner Cmd\n"
+    f"  4) {hl}logs ➪ Owner Cmd\n\n"
     f"𝗘𝗰𝗵𝗼: **ᴛᴏ ᴀᴄᴛɪᴠᴇ ᴇᴄʜᴏ ᴏɴ ᴀɴʏ ᴜꜱᴇʀ**\n"
     f"  1) {hl}echo <reply to user>\n"
     f"  2) {hl}rmecho <reply to user>\n\n"
     f"𝗟𝗲𝗮𝘃𝗲: **ᴛᴏ ʟᴇᴀᴠᴇ ɢʀᴏᴜᴘ/ᴄʜᴀɴɴᴇʟ**\n"
     f"  1) {hl}leave <group/chat id>\n"
-    f"  2) {hl}leave : Type in the Group bot will auto leave that group\n\n"
-    f"**© @JARVIS_V2**"
+    f"  2) {hl}leave : ᴛʏᴘᴇ ɪɴ ᴛʜᴇ ɢʀᴏᴜᴘ ʙᴏᴛ ᴡɪʟʟ ᴀᴜᴛᴏ ʟᴇᴀᴠᴇ ᴛʜᴀᴛ ɢʀᴏᴜᴘ\n\n"
+    f"**@JARVIS_V2**"
 )
 
 RAID_MSG = (
@@ -92,7 +92,7 @@ async def handle_callback_query(event, message, back_button_data):
     )
 
 async def handle_callback_query_error(event):
-    await event.answer("ᴘᴀʜʟᴇ ᴊᴀʀᴠɪs ᴘᴀᴘᴀ sᴇ sᴜᴅᴏ ʟᴇʟᴏ 𖤍!! @JARVIS_V2", cache_time=0, alert=True)
+    await event.answer("ᴘᴀʜʟᴇ ᴊᴀʀᴠɪs ᴘᴀᴘᴀ sᴇ sᴜᴅᴏ ʟᴇʟᴏ☎️ @JARVIS_V2", cache_time=0, alert=True)
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%shelp(?: |$)(.*)" % hl))
 async def help(event):
