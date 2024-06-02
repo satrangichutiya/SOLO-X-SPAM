@@ -23,7 +23,7 @@ async def ping(event):
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sreboot(?: |$)(.*)" % hl))
 async def restart(event):
     if event.sender_id in SUDO_USERS:
-        await event.reply("`BOT IS RESTARTING, PLEASE WAIT.`")
+        await event.reply("`ʙᴏᴛ ɪs ʀᴇsᴛᴀʀᴛɪɴɢ ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ`")
         try:
             await X1.disconnect()
         except Exception:
@@ -37,7 +37,7 @@ async def addsudo(event):
     if event.sender_id == OWNER_ID:
         await manage_sudo_users(event, add=True)
     elif event.sender_id in SUDO_USERS:
-        await event.reply("Only the owner can add sudo users.")
+        await event.reply("ᴏɴʟʏ ᴊᴀʀᴠɪs ᴄᴀɴ ᴀᴅᴅ sᴜᴅᴏ ᴜsᴇʀs ᴏʀ ʏᴏᴜ ᴄᴀɴ ɢᴇᴛ ʙʏ .ɢᴇᴛsᴜᴅᴏ")
     else:
         await prompt_join_channels(event)
 
@@ -46,22 +46,22 @@ async def removesudo(event):
     if event.sender_id == OWNER_ID:
         await manage_sudo_users(event, add=False)
     else:
-        await event.reply("Only the owner can remove sudo users.")
+        await event.reply("ᴏɴʟʏ ᴊᴀʀᴠɪs ᴄᴀɴ ʀᴇᴍᴏᴠᴇ sᴜᴅᴏ ᴜsᴇʀs")
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%ssudos(?: |$)(.*)" % hl))
 async def show_sudo_users(event):
     if event.sender_id == OWNER_ID:
-        sudo_users_list = "Current sudo users:\n" + "\n".join(f"- {user_id}" for user_id in SUDO_USERS)
+        sudo_users_list = "sᴜᴅᴏ ᴜsᴇʀs ʟɪsᴛ:\n" + "\n".join(f"- {user_id}" for user_id in SUDO_USERS)
         await event.reply(sudo_users_list)
     else:
-        await event.reply("Only the owner can view the sudo users list.")
+        await event.reply("ᴛʜɪs ғᴜɴᴄᴛɪᴏɴ ᴄᴀɴ ᴏɴʟʏ ᴘᴇʀғᴏʀᴍ ʙʏ ᴊᴀʀᴠɪs")
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%saddmultisudo(?: |$)(.*)" % hl))
 async def addmultisudo(event):
     if event.sender_id == OWNER_ID:
         await manage_multiple_sudo_users(event)
     elif event.sender_id in SUDO_USERS:
-        await event.reply("Only the owner can add multiple sudo users.")
+        await event.reply("ᴏɴʟʏ ᴊᴀʀᴠɪs ᴄᴀɴ ᴀᴅᴅ ᴍᴜʟᴛɪsᴜᴅᴏ ᴜsᴇʀs ᴀᴛ ᴀ ᴛɪᴍᴇ.")
     else:
         await prompt_join_channels(event)
 
@@ -81,17 +81,17 @@ async def getsudo(event):
                     await prompt_join_channels(event)
                     return
             except Exception as ex:
-                await event.reply(f"Error checking membership for {channel}: {ex}")
+                await event.reply(f"ᴇʀʀᴏʀ ᴄʜᴇᴄᴋɪɴɢ ᴍᴇᴍʙᴇʀsʜɪᴘ ғᴏʀ {channel}: {ex}")
                 return
         await manage_sudo_users(event, add=True)
     else:
-        await event.reply("You already have sudo privileges.")
+        await event.reply("ʏᴏᴜ ᴀʟʀᴇᴀᴅʏ ʜᴀᴠᴇ sᴜᴅᴏ ᴘʀɪᴠɪʟʟᴇɢᴇs")
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sverify(?: |$)(.*)" % hl))
 async def verify(event):
     if await verify_membership(event):
         await manage_sudo_users(event, add=True)
-        await event.reply("You have been verified and given sudo access!")
+        await event.reply("ʏᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴠᴇʀɪғɪᴇᴅ ᴀɴᴅ ᴀᴜᴛʜᴏʀɪsᴇᴅ ғᴏʀ ᴜsɪɴɢ ᴛʜɪs ʙᴏᴛ")
     else:
         await prompt_join_channels(event)
 
@@ -109,18 +109,18 @@ async def manage_sudo_users(event, add):
     heroku_var = app.config()
     if add:
         if target in sudousers.split():
-            await event.reply("User is already a sudo user.")
+            await event.reply("ᴛʜɪs ɢᴜʏ ɪs ᴀʟʀᴇᴀᴅʏ ɪɴ ᴛʜᴇ sᴜᴅᴏ ᴜsᴇʀ ʟɪsᴛ.")
         else:
             new_sudo_users = f"{sudousers} {target}".strip()
             heroku_var["SUDO_USERS"] = new_sudo_users
-            await event.reply(f"Added new sudo user: `{target}`. Restarting bot.")
+            await event.reply(f"ᴀᴅᴅᴇᴅ ɴᴇᴡ sᴜᴅᴏ ᴜsᴇʀs: `{target}`. ʀᴇsᴛᴀʀᴛɪɴɢ ʙᴏᴛ.")
     else:
         if target not in sudousers.split():
-            await event.reply("User is not in the sudo list.")
+            await event.reply("ᴜsᴇʀ ɪɴ ɴᴏᴛ ɪs sᴜᴅᴏ ᴜsᴇʀs ʟɪsᴛ.")
         else:
             new_sudo_users = " ".join(user for user in sudousers.split() if user != target)
             heroku_var["SUDO_USERS"] = new_sudo_users
-            await event.reply(f"Removed sudo user: `{target}`")
+            await event.reply(f"ʀᴇᴍᴏᴠɪɴɢ ᴀʟʟ sᴜᴅᴏ ᴘᴏᴡᴇʀs: `{target}`")
 
 async def manage_multiple_sudo_users(event):
     heroku = heroku3.from_key(HEROKU_API_KEY)
@@ -141,21 +141,21 @@ async def manage_multiple_sudo_users(event):
     new_sudo_users = set(sudousers.split())
     new_sudo_users.update(target_ids)
     heroku_var["SUDO_USERS"] = " ".join(new_sudo_users)
-    await event.reply(f"Added {len(target_ids)} new sudo users.")
+    await event.reply(f"ᴀᴅᴅᴇᴅ {len(target_ids)} ɴᴇᴡ sᴜᴅᴏ ᴜsᴇʀs ɪɴ ᴛʜᴇ ʟɪsᴛ.")
 
 async def prompt_join_channels(event):
     buttons = [
-        [Button.url("Join JARVIS V SUPPORT", "https://t.me/JARVIS_V_SUPPORT")],
-        [Button.url("Join Dora Hub", "https://t.me/Dora_Hub")],
-        [Button.inline("Verify", b"verify_membership")]
+        [Button.url("ᴊᴀʀᴠɪs sᴜᴘᴘᴏʀᴛ", "https://t.me/JARVIS_V_SUPPORT")],
+        [Button.url("sᴜᴘᴘᴏʀᴛ ᴄʜᴀᴛ", "https://t.me/Dora_Hub")],
+        [Button.inline("ᴠᴇʀɪғʏ ✅", b"verify_membership")]
     ]
-    await event.reply("To use this feature, please join the following channels and then click verify:", buttons=buttons)
+    await event.reply("ᴛᴏ ᴜsᴇ ᴛʜɪs ғᴇᴀᴛᴜʀᴇ, ᴘʟᴇᴀsᴇ ᴊᴏɪɴ ᴛʜᴇ ғᴏʟʟᴏᴡɪɴɢ ᴠᴀʀs ᴀɴᴅ ᴛʜᴇɴ ᴄʟɪᴄᴋ ᴏɴ ᴠᴇʀɪғʏ:", buttons=buttons)
 
 @X1.on(events.CallbackQuery(data=b"verify_membership"))
 async def verify_membership(event):
     if await verify_membership(event):
         await manage_sudo_users(event, add=True)
-        await event.reply("You have been verified and given sudo access!")
+        await event.reply("ʏᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴠᴇʀɪғɪᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ✅\nɴᴏᴡ ᴀᴅᴅɪɴɢ ʏᴏᴜ ɪɴ sᴜᴅᴏ ᴜsᴇʀs!")
     else:
         await prompt_join_channels(event)
 
