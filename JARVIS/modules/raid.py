@@ -18,7 +18,7 @@ async def get_user_entity(e):
 # Helper function to handle exceptions
 async def handle_exception(e, module_name):
     if not (e.reply_to_msg_id or len(e.text.split()) > 2):
-        await e.reply(f"𝗠𝗼𝗱𝘂𝗹𝗲 𝗡𝗮𝗺𝗲: {module_name}\n  » {hl}{module_name.lower()} <ᴄᴏᴜɴᴛ> <ᴜꜱᴇʀɴᴀᴍᴇ ᴏꜰ ᴜꜱᴇʀ>\n  » {hl}{module_name.lower()} <ᴄᴏᴜɴᴛ> <ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴜꜱᴇʀ>")
+        await e.reply(f"**ᴍᴏᴅᴜʟᴇ ɴᴀᴍᴇ**: {module_name}\n  » {hl}{module_name.lower()} <ᴄᴏᴜɴᴛ> <ᴜꜱᴇʀɴᴀᴍᴇ ᴏꜰ ᴜꜱᴇʀ>\n  » {hl}{module_name.lower()} <ᴄᴏᴜɴᴛ> <ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴜꜱᴇʀ>")
 
 # Function to execute raid
 async def execute_raid(e, uid, first_name, counter, raid_list):
@@ -39,11 +39,11 @@ async def raid_handler(e, raid_list, module_name):
                 first_name = entity.first_name
                 counter = int(e.text.split()[1])
                 if uid in FRIDAY:
-                    await e.reply("REPO OWNER HAI YE.")
+                    await e.reply("ᴛʜɪs ᴘᴇʀsᴏɴ ɪs ᴛʜᴇ ᴄʀᴇᴀᴛᴏʀ ᴏғ ᴛʜɪs ᴘʀᴏᴊᴇᴄᴛ sᴏᴜʀᴄᴇ.")
                 elif uid == OWNER_ID:
-                    await e.reply("BETA BAAP PE RAID NHI KRTE HAI...")
+                    await e.reply("ᴋɪᴅᴢᴢ😂 ᴏᴡɴᴇʀ ʜᴀɪ ʏᴇ ᴍᴇʀᴀ ʙᴀʜᴜᴛ ᴍᴀʀᴇɢᴀ...")
                 elif uid in SUDO_USERS:
-                    await e.reply("YE BHI JARVIS KA BACHA HAI ISPE RAID MAT MARO!...")
+                    await e.reply("ᴛʜɪs ᴘᴇʀsᴏɴ ᴀʟsᴏ ʜᴀᴠᴇ ᴀʙɪʟɪᴛɪᴇs ᴛᴏ ᴜsᴇ ᴍᴇ sᴏ ɪ ᴄᴀɴᴛ ɢᴏ ᴀɢᴀɪɴsᴛ ᴛʜᴇᴍ...")
                 else:
                     await execute_raid(e, uid, first_name, counter, raid_list)
             else:
@@ -61,16 +61,16 @@ async def reply_raid_handler(e, module_name):
             if entity:
                 user_id = entity.id
                 if user_id in FRIDAY:
-                    await e.reply("Beta Repo Owner Hai ye , Gand Me Lund Daalke chla dega...")
+                    await e.reply("ᴛʜɪs ᴘᴇʀsᴏɴ ɪs ᴛʜᴇ ᴄʀᴇᴀᴛᴏʀ ᴏғ ᴛʜɪs ᴘʀᴏᴊᴇᴄᴛ sᴏᴜʀᴄᴇ.")
                 elif user_id == OWNER_ID:
-                    await e.reply("Beta Dobara Kiya Nah Toh Jha se Nikle ho Whi Gaad diye jaoge🥱...")
+                    await e.reply("ᴋɪᴅᴢᴢ😂 ᴏᴡɴᴇʀ ʜᴀɪ ʏᴇ ᴍᴇʀᴀ ʙᴀʜᴜᴛ ᴍᴀʀᴇɢᴀ....")
                 elif user_id in SUDO_USERS:
-                    await e.reply("YE BHI JARVIS KA BACHA HAI ISPE RAID MAT MARO!...")
+                    await e.reply("ᴛʜɪs ᴘᴇʀsᴏɴ ᴀʟsᴏ ʜᴀᴠᴇ ᴀʙɪʟɪᴛɪᴇs ᴛᴏ ᴜsᴇ ᴍᴇ sᴏ ɪ ᴄᴀɴᴛ ɢᴏ ᴀɢᴀɪɴsᴛ ᴛʜᴇᴍ...")
                 else:
                     check = f"{user_id}_{e.chat_id}"
                     if check not in REPLY_RAID:
                         REPLY_RAID.append(check)
-                    await e.reply("» LAG GYA REPLY RAID.. !! ✅")
+                    await e.reply("» ʀᴇᴘʟʏ ʀᴀɪᴅ ʜᴀs ʙᴇᴇɴ ᴀᴄᴛɪᴠᴀᴛᴇᴅ ᴏɴ ᴛʜɪs ɢᴜʏ ✅")
             else:
                 await handle_exception(e, module_name)
         except NameError:
@@ -85,7 +85,7 @@ async def disable_reply_raid_handler(e, module_name):
                 check = f"{entity.id}_{e.chat_id}"
                 if check in REPLY_RAID:
                     REPLY_RAID.remove(check)
-                await e.reply("» HAT GYA REPLY RAID !! ✅")
+                await e.reply("» ʀᴇᴘʟʏ ʀᴀɪᴅ ʜᴀs ʙᴇᴇɴ ᴅᴇᴀᴄᴛɪᴠᴀᴛᴇᴅ ᴏɴ ᴛʜɪs ɢᴜʏ ✅")
             else:
                 await handle_exception(e, module_name)
         except NameError:
