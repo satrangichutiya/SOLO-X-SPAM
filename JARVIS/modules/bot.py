@@ -155,7 +155,7 @@ async def prompt_join_channels(event):
 async def verify_membership(event):
     if await verify_membership(event):
         await manage_sudo_users(event, add=True)
-        await event.reply("ʏᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴠᴇʀɪғɪᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ✅\nɴᴏᴡ ᴀᴅᴅɪɴɢ ʏᴏᴜ ɪɴ sᴜᴅᴏ ᴜsᴇʀs!")
+        await event.reply("ʏᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴠᴇʀɪғɪᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ✅\nᴀᴅᴅᴇᴅʏᴏᴜ ɪɴ sᴜᴅᴏ ᴜsᴇʀs!")
     else:
         await prompt_join_channels(event)
 
