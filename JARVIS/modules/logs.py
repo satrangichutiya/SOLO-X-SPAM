@@ -71,7 +71,7 @@ async def track_stats(event):
     if event.is_private:
         user_id = event.sender_id
         stats_collection.update_one(
-            {'type': 'user', 'id': user_id}},
+            {'type': 'user', 'id': user_id},
             {'$set': {'id': user_id}},
             upsert=True
         )
