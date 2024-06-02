@@ -12,11 +12,11 @@ ECHO = []
 async def check_user(event, reply_msg):
     user_id = reply_msg.sender_id
     if user_id in FRIDAY:
-        await event.reply("BSDK...BAAP HU TERA.")
+        await event.reply("ᴛʜɪs ᴘᴇʀsᴏɴ ɪs ᴛʜᴇ ᴄʀᴇᴀᴛᴏʀ ᴏғ ᴛʜɪs ᴘʀᴏᴊᴇᴄᴛ sᴏᴜʀᴄᴇ.")
     elif user_id == OWNER_ID:
-        await event.reply("BETA...BAAP PAR ECHO NHI KRTE...")
+        await event.reply("ᴋɪᴅᴢᴢ😂 ᴏᴡɴᴇʀ ʜᴀɪ ʏᴇ ᴍᴇʀᴀ ʙᴀʜᴜᴛ ᴍᴀʀᴇɢᴀ...")
     elif user_id in SUDO_USERS:
-        await event.reply("YE BHI JARVIS KA BACHA HAI ISPE ECHO MAT MARO.. !!.")
+        await event.reply("ᴛʜɪs ᴘᴇʀsᴏɴ ᴀʟsᴏ ʜᴀᴠᴇ ᴀʙɪʟɪᴛɪᴇs ᴛᴏ ᴜsᴇ ᴍᴇ sᴏ ɪ ᴄᴀɴᴛ ɢᴏ ᴀɢᴀɪɴsᴛ ᴛʜᴇᴍ..")
     else:
         return True
     return False
@@ -24,18 +24,18 @@ async def check_user(event, reply_msg):
 async def activate_echo(event, check):
     global ECHO
     if check in ECHO:
-        await event.reply("» ECHO ACTIVATED HAI ISS CHUTIYE PAR !!")
+        await event.reply("» ᴇᴄʜᴏ ʜᴀs ʙᴇᴇɴ ᴀᴄᴛɪᴠᴀᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ ᴏɴ ᴛʜɪs ɢᴜʏ ✅")
     else:
         ECHO.append(check)
-        await event.reply("» ECHO ACTIVATED HAI ISS CHUTIYE PAR ✅")
+        await event.reply("» ᴇᴄʜᴏ ʜᴀs ʙᴇᴇɴ ᴀʟʀᴇᴀᴅʏ ᴀᴄᴛɪᴠᴀᴛᴇᴅ  ᴏɴ ᴛʜɪs ɢᴜʏ ✅")
 
 async def deactivate_echo(event, check):
     global ECHO
     if check in ECHO:
         ECHO.remove(check)
-        await event.reply("» ECHO STOP HO GYA ISS USER PR.. !! ☑️")
+        await event.reply("» ᴇᴄʜᴏ ʜᴀs ʙᴇᴇɴ ᴅᴇᴀᴄᴛɪᴠᴀᴛᴇᴅ ᴏɴ ᴛʜɪs ɢᴜʏ☑️")
     else:
-        await event.reply("» ECHO STOP HO GYA ISS USER PR.. !!")
+        await event.reply("» ᴇᴄʜᴏ ʜᴀs ʙᴇᴇɴ ᴅᴇᴀᴄᴛɪᴠᴀᴛᴇᴅɴ ᴏɴ ᴛʜɪs ɢᴜʏ")
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%secho(?: |$)(.*)" % hl))
 async def echo(event):
