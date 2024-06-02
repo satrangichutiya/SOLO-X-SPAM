@@ -5,10 +5,10 @@ from config import X1
 START_BUTTON = [
     [Button.inline("• ᴄᴏᴍᴍᴀɴᴅs •", data="help_back")],
     [
-        Button.url("• ᴄʜᴀɴɴᴇʟ •", "https://t.me/JARVIS_V_SUPPORT/5"),
+        Button.url("• ᴄʜᴀɴɴᴇʟ •", "https://t.me/JARVIS_V_SUPPORT"),
         Button.url("• sᴜᴘᴘᴏʀᴛ •", "https://t.me/Dora_Hub")
     ],
-    [Button.url("• ʀᴇᴘᴏ •", "https://github.com/doraemon890/JARVIS-X-SPAM")]
+    [Button.url("• ʀᴇᴘᴏ •", "https://github.com/doraemon890/SOLO-X-SPAM")]
 ]
 
 IMAGE_URL = "https://github.com/doraemon890/JARVIS-X-SPAM/assets/155803358/f30a5777-9823-45d0-9860-342eceadb774"
