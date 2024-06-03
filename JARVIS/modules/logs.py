@@ -93,14 +93,24 @@ async def callback(event):
     data = event.data.decode('utf-8')
     if data == "user_stats":
         user_count = stats_collection.count_documents({'type': 'user'})
-        await event.edit(f"Total Users: {user_count}")
+        buttons = [[Button.inline("Back", data="back_to_stats")]]
+        await event.edit(f"Total Users: {user_count}", buttons=buttons)
     elif data == "group_stats":
         group_count = stats_collection.count_documents({'type': 'group'})
-        await event.edit(f"Total Groups: {group_count}")
+        buttons = [[Button.inline("Back", data="back_to_stats")]]
+        await event.edit(f"Total Groups: {group_count}", buttons=buttons)
     elif data == "overall_stats":
         user_count = stats_collection.count_documents({'type': 'user'})
         group_count = stats_collection.count_documents({'type': 'group'})
-        await event.edit(f"Total Users: {user_count}\nTotal Groups: {group_count}")
+        buttons = [[Button.inline("Back", data="back_to_stats")]]
+        await event.edit(f"Total Users: {user_count}\nTotal Groups: {group_count}", buttons=buttons)
+    elif data == "back_to_stats":
+        buttons = [
+            [Button.inline("User Stats", data="user_stats")],
+            [Button.inline("Group Stats", data="group_stats")],
+            [Button.inline("Overall Stats", data="overall_stats")]
+        ]
+        await event.edit("Choose the stats you want to view:", buttons=buttons)
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sbroadcast(?: |$)(.*)" % hl))
 async def broadcast(event):
