@@ -72,6 +72,8 @@ async def track_stats(event):
             upsert=True
         )
 
+AYU = "https://graph.org/file/3a93e14b4e1c6c1d031e7.mp4"
+
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sstats(?: |$)(.*)" % hl))
 async def check_stats(event):
     if event.sender_id == OWNER_ID or event.sender_id in SUDO_USERS:
@@ -80,7 +82,7 @@ async def check_stats(event):
             [Button.inline("ᴄʜᴀᴛs", data="group_stats")],
             [Button.inline("ᴏᴠᴇʀᴀʟʟ", data="overall_stats")]
         ]
-        await event.reply("⚔️ 𝗝𝗔𝗥𝗩𝗜𝗦 𝗦𝗢𝗟𝗢 𝗦𝗧𝗔𝗧𝗦 ⚔️", buttons=buttons)
+        await event.reply(caption="⚔️ 𝗝𝗔𝗥𝗩𝗜𝗦 𝗦𝗢𝗟𝗢 𝗦𝗧𝗔𝗧𝗦 ⚔️", video=AYU, buttons=buttons)
     else:
         await event.reply("ʏᴏᴜ ᴅᴏ ɴᴏᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪssɪᴏɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴍᴇɴᴜ.")
 
@@ -106,7 +108,7 @@ async def callback(event):
             [Button.inline("ᴄʜᴀᴛs", data="group_stats")],
             [Button.inline("ᴏᴠᴇʀᴀʟʟ", data="overall_stats")]
         ]
-        await event.edit("⚔️ 𝗝𝗔𝗥𝗩𝗜𝗦 𝗦𝗢𝗟𝗢 𝗦𝗧𝗔𝗧𝗦 ⚔️", buttons=buttons)
+        await event.edit(caption="⚔️ 𝗝𝗔𝗥𝗩𝗜𝗦 𝗦𝗢𝗟𝗢 𝗦𝗧𝗔𝗧𝗦 ⚔️", video=AYU, buttons=buttons))
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sbroadcast(?: |$)(.*)" % hl))
 async def broadcast(event):
