@@ -1,3 +1,6 @@
+## Copy Paster Must Give Credit...
+## @JARVIS_V2
+
 import logging
 from telethon import TelegramClient
 from os import getenv

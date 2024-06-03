@@ -1,3 +1,6 @@
+## Copy Paster Must Give Credit...
+## @JARVIS_V2
+
 from config import X1, SUDO_USERS, CMD_HNDLR as hl
 from telethon import events
 from telethon.tl.functions.channels import LeaveChannelRequest

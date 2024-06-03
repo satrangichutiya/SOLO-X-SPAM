@@ -2,3 +2,5 @@ telethon
 cryptg
 heroku3
 pymongo
+## Copy Paster Must Give Credit...
+## @JARVIS_V2

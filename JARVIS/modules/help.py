@@ -1,3 +1,6 @@
+## Copy Paster Must Give Credit...
+## @JARVIS_V2
+
 from telethon import events, Button
 from config import X1, SUDO_USERS, CMD_HNDLR as hl
 

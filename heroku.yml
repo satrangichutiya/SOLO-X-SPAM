@@ -2,4 +2,4 @@ build:
   docker:
     Jarvis: Dockerfile
 run:
-  Jarvis: python3 -m main.py
+  Jarvis: python3 -m main.py 

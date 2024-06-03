@@ -1,3 +1,6 @@
+## Copy Paster Must Give Credit...
+## @JARVIS_V2
+
 import asyncio
 import heroku3
 from pymongo import MongoClient

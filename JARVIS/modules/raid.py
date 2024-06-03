@@ -1,3 +1,6 @@
+## Copy Paster Must Give Credit...
+## @JARVIS_V2
+
 import asyncio
 from random import choice
 from telethon import events

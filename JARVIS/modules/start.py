@@ -1,3 +1,6 @@
+## Copy Paster Must Give Credit...
+## @JARVIS_V2
+
 from telethon import __version__, events, Button
 from config import X1
 
