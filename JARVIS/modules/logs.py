@@ -8,29 +8,30 @@ from telethon.errors import ForbiddenError
 from telethon.tl.custom import Button
 
 # MongoDB configuration
-MONGO_URI = MONGO_DB_URI
-client = MongoClient(MONGO_URI)
+client = MongoClient(MONGO_DB_URI)
 db = client['bot_database']
 stats_collection = db['stats']
 
-# Function to fetch Heroku logs
+# Heroku logs URL
+AYU = "https://graph.org/file/3a93e14b4e1c6c1d031e7.mp4"
+
 async def fetch_heroku_logs(ANNIE):
     if HEROKU_APP_NAME is None or HEROKU_API_KEY is None:
-        await ANNIE.reply("First Set These Vars In Heroku: `HEROKU_API_KEY` And `HEROKU_APP_NAME`.")
+        await ANNIE.reply("First set these vars in Heroku: `HEROKU_API_KEY` and `HEROKU_APP_NAME`.")
         return None
 
     try:
-        Heroku = heroku3.from_key(HEROKU_API_KEY)
-        app = Heroku.app(HEROKU_APP_NAME)
+        heroku_conn = heroku3.from_key(HEROKU_API_KEY)
+        app = heroku_conn.app(HEROKU_APP_NAME)
     except Exception:
-        await ANNIE.reply("Make Sure Your Heroku API Key & App Name Are Configured Correctly In Heroku.")
+        await ANNIE.reply("Make sure your Heroku API Key and App Name are configured correctly in Heroku.")
         return None
 
     return app.get_log()
 
 async def write_logs_to_file(logs):
     with open("Jarvislogs.txt", "w") as logfile:
-        logfile.write("𖤍 ᴊᴀʀᴠɪs 𖤍[ ʙᴏᴛ ʟᴏɢs ]\n\n" + logs)
+        logfile.write("𖤍 ᴊᴀʀᴠɪs 𖤍 [ ʙᴏᴛ ʟᴏɢs ]\n\n" + logs)
 
 async def send_logs_file(ANNIE, ms):
     try:
@@ -64,15 +65,13 @@ async def track_stats(event):
             {'$set': {'id': group_id}},
             upsert=True
         )
-    if event.is_private:
+    elif event.is_private:
         user_id = event.sender_id
         stats_collection.update_one(
             {'type': 'user', 'id': user_id},
             {'$set': {'id': user_id}},
             upsert=True
         )
-
-AYU = "https://graph.org/file/3a93e14b4e1c6c1d031e7.mp4"
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sstats(?: |$)(.*)" % hl))
 async def check_stats(event):
@@ -82,8 +81,7 @@ async def check_stats(event):
         stats_message = f"ᴛᴏᴛᴀʟ ᴜsᴇʀs: {user_count}\nᴛᴏᴛᴀʟ ɢʀᴏᴜᴘs: {group_count}"
         
         await event.reply(stats_message, file=AYU, buttons=[
-            [Button.inline("ᴜsᴇʀs", data="user_stats")],
-            [Button.inline("ᴄʜᴀᴛs", data="group_stats")],
+            [Button.inline("ᴜsᴇʀs", data="user_stats"), Button.inline("ᴄʜᴀᴛs", data="group_stats")],
             [Button.inline("ᴏᴠᴇʀᴀʟʟ", data="overall_stats")]
         ])
     else:
@@ -107,8 +105,7 @@ async def callback(event):
         await event.edit(f"ᴛᴏᴛᴀʟ ᴜsᴇʀs: {user_count}\nᴛᴏᴛᴀʟ ɢʀᴏᴜᴘs: {group_count}", buttons=buttons)
     elif data == "back_to_stats":
         buttons = [
-            [Button.inline("ᴜsᴇʀs", data="user_stats")],
-            [Button.inline("ᴄʜᴀᴛs", data="group_stats")],
+            [Button.inline("ᴜsᴇʀs", data="user_stats"), Button.inline("ᴄʜᴀᴛs", data="group_stats")],
             [Button.inline("ᴏᴠᴇʀᴀʟʟ", data="overall_stats")]
         ]
         await event.edit("⚔️ 𝗝𝗔𝗥𝗩𝗜𝗦 𝗦𝗢𝗟𝗢 𝗦𝗧𝗔𝗧𝗦 ⚔️", file=AYU, buttons=buttons)
