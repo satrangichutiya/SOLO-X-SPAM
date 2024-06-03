@@ -8,7 +8,7 @@ from telethon.errors import ForbiddenError
 from telethon.tl.custom import Button
 
 # MongoDB configuration
-MONGO_URI = config.MONGO_DB_URI
+MONGO_URI = MONGO_DB_URI
 client = MongoClient(MONGO_URI)
 db = client['bot_database']
 stats_collection = db['stats']
