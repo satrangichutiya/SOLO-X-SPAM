@@ -1,14 +1,14 @@
 import asyncio
 import heroku3
 from pymongo import MongoClient
-from config import X1, SUDO_USERS, OWNER_ID, HEROKU_API_KEY, HEROKU_APP_NAME, CMD_HNDLR as hl
+from config import X1, MONGO_DB_URI, SUDO_USERS, OWNER_ID, HEROKU_API_KEY, HEROKU_APP_NAME, CMD_HNDLR as hl
 from datetime import datetime
 from telethon import events
 from telethon.errors import ForbiddenError
 from telethon.tl.custom import Button
 
 # MongoDB configuration
-MONGO_URI = 'mongodb+srv://JARVIS:SPAMX10@jarvisspam.2wmzbix.mongodb.net/?retryWrites=true&w=majority&appName=JarvisSpam'
+MONGO_URI = config.MONGO_DB_URI
 client = MongoClient(MONGO_URI)
 db = client['bot_database']
 stats_collection = db['stats']
@@ -32,12 +32,12 @@ async def fetch_heroku_logs(ANNIE):
     return app.get_log()
 
 async def write_logs_to_file(logs):
-    with open("JARVISlogs.txt", "w") as logfile:
-        logfile.write("⚡ JARVISBOTS ⚡ [ Bot Logs ]\n\n" + logs)
+    with open("Jarvislogs.txt", "w") as logfile:
+        logfile.write("𖤍 ᴊᴀʀᴠɪs 𖤍[ ʙᴏᴛ ʟᴏɢs ]\n\n" + logs)
 
 async def send_logs_file(ANNIE, ms):
     try:
-        await X1.send_file(ANNIE.chat_id, "JARVISlogs.txt", caption=f"⚡ **JARVIS BOTS LOGS** ⚡\n  » **Time Taken:** `{ms} seconds`")
+        await X1.send_file(ANNIE.chat_id, "Jarvislogs.txt", caption=f"𝗝𝗔𝗥𝗩𝗜𝗦 𝗕𝗢𝗧𝗦 𝗟𝗢𝗚𝗦 📨\n\n  » **Time Taken:** `{ms} seconds`")
     except Exception as e:
         await ANNIE.reply(f"An Exception Occurred!\n\n**ERROR:** {str(e)}")
 
@@ -57,7 +57,7 @@ async def logs(ANNIE):
             await fetch.delete()
 
     elif ANNIE.sender_id in SUDO_USERS:
-        await ANNIE.reply("» BSDK..ISKO SIRF OWNER USE KR SKTA HAI...")
+        await ANNIE.reply("**»** ᴏɴʟʏ ᴊᴀʀᴠɪs ᴄᴀɴ ᴘᴇʀғᴏʀᴍ ᴛʜɪs ᴀᴄᴛɪᴏɴ...")
 
 @X1.on(events.NewMessage(incoming=True))
 async def track_stats(event):
@@ -78,39 +78,39 @@ async def track_stats(event):
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sstats(?: |$)(.*)" % hl))
 async def check_stats(event):
-    if event.sender_id == OWNER_ID:
+    if event.sender_id == SUDO_USERS:
         buttons = [
-            [Button.inline("User Stats", data="user_stats")],
-            [Button.inline("Group Stats", data="group_stats")],
-            [Button.inline("Overall Stats", data="overall_stats")]
+            [Button.inline("ᴜsᴇʀs", data="user_stats")],
+            [Button.inline("ᴄʜᴀᴛs", data="group_stats")],
+            [Button.inline("ᴏᴠᴇʀᴀʟʟ", data="overall_stats")]
         ]
-        await event.reply("Choose the stats you want to view:", buttons=buttons)
+        await event.reply("⚔️ 𝗝𝗔𝗥𝗩𝗜𝗦 𝗦𝗢𝗟𝗢 𝗦𝗧𝗔𝗧𝗦 ⚔️", buttons=buttons)
     else:
-        await event.reply("You do not have permission to use this command.")
+        await event.reply("ʏᴏʏ ᴅᴏ ɴᴏᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪssɪᴏɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴍᴇɴᴜ.")
 
 @X1.on(events.CallbackQuery)
 async def callback(event):
     data = event.data.decode('utf-8')
     if data == "user_stats":
         user_count = stats_collection.count_documents({'type': 'user'})
-        buttons = [[Button.inline("Back", data="back_to_stats")]]
-        await event.edit(f"Total Users: {user_count}", buttons=buttons)
+        buttons = [[Button.inline("ʙᴀᴄᴋ", data="back_to_stats")]]
+        await event.edit(f"ᴛᴏᴛᴀʟ ᴜsᴇʀs: {user_count}", buttons=buttons)
     elif data == "group_stats":
         group_count = stats_collection.count_documents({'type': 'group'})
-        buttons = [[Button.inline("Back", data="back_to_stats")]]
-        await event.edit(f"Total Groups: {group_count}", buttons=buttons)
+        buttons = [[Button.inline("ʙᴀᴄᴋ", data="back_to_stats")]]
+        await event.edit(f"ᴄʜᴀᴛs: {group_count}", buttons=buttons)
     elif data == "overall_stats":
         user_count = stats_collection.count_documents({'type': 'user'})
         group_count = stats_collection.count_documents({'type': 'group'})
-        buttons = [[Button.inline("Back", data="back_to_stats")]]
-        await event.edit(f"Total Users: {user_count}\nTotal Groups: {group_count}", buttons=buttons)
+        buttons = [[Button.inline("ʙᴀᴄᴋ", data="back_to_stats")]]
+        await event.edit(f"ᴛᴏᴛᴀʟ ᴜsᴇʀs: {user_count}\nTotal Groups: {group_count}", buttons=buttons)
     elif data == "back_to_stats":
         buttons = [
-            [Button.inline("User Stats", data="user_stats")],
-            [Button.inline("Group Stats", data="group_stats")],
-            [Button.inline("Overall Stats", data="overall_stats")]
+            [Button.inline("ᴜsᴇʀs", data="user_stats")],
+            [Button.inline("ᴄʜᴀᴛs", data="group_stats")],
+            [Button.inline("ᴏᴠᴇʀᴀʟʟ", data="overall_stats")]
         ]
-        await event.edit("Choose the stats you want to view:", buttons=buttons)
+        await event.edit("⚔️ 𝗝𝗔𝗥𝗩𝗜𝗦 𝗦𝗢𝗟𝗢 𝗦𝗧𝗔𝗧𝗦 ⚔️", buttons=buttons)
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sbroadcast(?: |$)(.*)" % hl))
 async def broadcast(event):
@@ -119,7 +119,7 @@ async def broadcast(event):
         message = event.pattern_match.group(1) or (reply and reply.text)
 
         if not message:
-            await event.reply("Please provide a message to broadcast or reply to a message.")
+            await event.reply("ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ ᴏʀ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ.")
             return
         
         users = stats_collection.find({'type': 'user'})
@@ -141,6 +141,6 @@ async def broadcast(event):
             except Exception as e:
                 print(f"Error sending message to {group['id']}: {str(e)}")
         
-        await event.reply("Broadcast completed.")
+        await event.reply("ʙʀᴏᴀᴅᴄᴀsᴛ ʜᴀs ʙᴇᴇɴ ᴄᴏᴍᴘʟᴇᴛᴇᴅ.")
     else:
-        await event.reply("You do not have permission to use this command.")
+        await event.reply("ᴏɴʟʏ ᴊᴀʀᴠɪs ᴄᴀɴ ᴘᴇʀғᴏʀᴍ ᴛʜɪs ᴀᴄᴛɪᴏɴ.")
