@@ -15,18 +15,14 @@ stats_collection = db['stats']
 
 async def fetch_heroku_logs(ANNIE):
     if (HEROKU_APP_NAME is None) or (HEROKU_API_KEY is None):
-        await ANNIE.reply(
-            "First Set These Vars In Heroku: `HEROKU_API_KEY` And `HEROKU_APP_NAME`.",
-        )
+        await ANNIE.reply("First Set These Vars In Heroku: `HEROKU_API_KEY` And `HEROKU_APP_NAME`.")
         return None
 
     try:
         Heroku = heroku3.from_key(HEROKU_API_KEY)
         app = Heroku.app(HEROKU_APP_NAME)
     except BaseException:
-        await ANNIE.reply(
-            "Make Sure Your Heroku API Key & App Name Are Configured Correctly In Heroku."
-        )
+        await ANNIE.reply("Make Sure Your Heroku API Key & App Name Are Configured Correctly In Heroku.")
         return None
 
     return app.get_log()
@@ -45,7 +41,7 @@ async def send_logs_file(ANNIE, ms):
 async def logs(ANNIE):
     if ANNIE.sender_id == OWNER_ID:
         start = datetime.now()
-        fetch = await ANNIE.reply(f"__Fetching Logs...__")
+        fetch = await ANNIE.reply("__Fetching Logs...__")
         logs = await fetch_heroku_logs(ANNIE)
 
         if logs is not None:
@@ -55,7 +51,6 @@ async def logs(ANNIE):
             await asyncio.sleep(1)
             await send_logs_file(ANNIE, ms)
             await fetch.delete()
-
     elif ANNIE.sender_id in SUDO_USERS:
         await ANNIE.reply("**»** ᴏɴʟʏ ᴊᴀʀᴠɪs ᴄᴀɴ ᴘᴇʀғᴏʀᴍ ᴛʜɪs ᴀᴄᴛɪᴏɴ...")
 
@@ -78,7 +73,7 @@ async def track_stats(event):
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sstats(?: |$)(.*)" % hl))
 async def check_stats(event):
-    if event.sender_id == SUDO_USERS:
+    if event.sender_id == OWNER_ID or event.sender_id in SUDO_USERS:
         buttons = [
             [Button.inline("ᴜsᴇʀs", data="user_stats")],
             [Button.inline("ᴄʜᴀᴛs", data="group_stats")],
@@ -86,7 +81,7 @@ async def check_stats(event):
         ]
         await event.reply("⚔️ 𝗝𝗔𝗥𝗩𝗜𝗦 𝗦𝗢𝗟𝗢 𝗦𝗧𝗔𝗧𝗦 ⚔️", buttons=buttons)
     else:
-        await event.reply("ʏᴏʏ ᴅᴏ ɴᴏᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪssɪᴏɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴍᴇɴᴜ.")
+        await event.reply("ʏᴏᴜ ᴅᴏ ɴᴏᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪssɪᴏɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴍᴇɴᴜ.")
 
 @X1.on(events.CallbackQuery)
 async def callback(event):
@@ -103,7 +98,7 @@ async def callback(event):
         user_count = stats_collection.count_documents({'type': 'user'})
         group_count = stats_collection.count_documents({'type': 'group'})
         buttons = [[Button.inline("ʙᴀᴄᴋ", data="back_to_stats")]]
-        await event.edit(f"ᴛᴏᴛᴀʟ ᴜsᴇʀs: {user_count}\nTotal Groups: {group_count}", buttons=buttons)
+        await event.edit(f"ᴛᴏᴛᴀʟ ᴜsᴇʀs: {user_count}\nᴛᴏᴛᴀʟ ɢʀᴏᴜᴘs: {group_count}", buttons=buttons)
     elif data == "back_to_stats":
         buttons = [
             [Button.inline("ᴜsᴇʀs", data="user_stats")],
