@@ -16,6 +16,7 @@ CMD_HNDLR = getenv("CMD_HNDLR", default=".")
 HEROKU_APP_NAME = getenv("HEROKU_APP_NAME", None)
 HEROKU_API_KEY = getenv("HEROKU_API_KEY", None)
 BOT_TOKEN = getenv("BOT_TOKEN", default=None)
+MONGO_DB_URI = getenv("MONGO_DB_URI")
 
 # Set up sudo users
 SUDO_USERS = list(map(int, getenv("SUDO_USERS", default="6757745933").split()))
