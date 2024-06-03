@@ -77,12 +77,15 @@ AYU = "https://graph.org/file/3a93e14b4e1c6c1d031e7.mp4"
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sstats(?: |$)(.*)" % hl))
 async def check_stats(event):
     if event.sender_id == OWNER_ID or event.sender_id in SUDO_USERS:
-        buttons = [
+        user_count = stats_collection.count_documents({'type': 'user'})
+        group_count = stats_collection.count_documents({'type': 'group'})
+        stats_message = f"ᴛᴏᴛᴀʟ ᴜsᴇʀs: {user_count}\nᴛᴏᴛᴀʟ ɢʀᴏᴜᴘs: {group_count}"
+        
+        await event.reply(stats_message, file=AYU, buttons=[
             [Button.inline("ᴜsᴇʀs", data="user_stats")],
             [Button.inline("ᴄʜᴀᴛs", data="group_stats")],
             [Button.inline("ᴏᴠᴇʀᴀʟʟ", data="overall_stats")]
-        ]
-        await event.reply(caption="⚔️ 𝗝𝗔𝗥𝗩𝗜𝗦 𝗦𝗢𝗟𝗢 𝗦𝗧𝗔𝗧𝗦 ⚔️", video=AYU, buttons=buttons)
+        ])
     else:
         await event.reply("ʏᴏᴜ ᴅᴏ ɴᴏᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪssɪᴏɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴍᴇɴᴜ.")
 
@@ -108,7 +111,7 @@ async def callback(event):
             [Button.inline("ᴄʜᴀᴛs", data="group_stats")],
             [Button.inline("ᴏᴠᴇʀᴀʟʟ", data="overall_stats")]
         ]
-        await event.edit(caption="⚔️ 𝗝𝗔𝗥𝗩𝗜𝗦 𝗦𝗢𝗟𝗢 𝗦𝗧𝗔𝗧𝗦 ⚔️", video=AYU, buttons=buttons))
+        await event.edit("⚔️ 𝗝𝗔𝗥𝗩𝗜𝗦 𝗦𝗢𝗟𝗢 𝗦𝗧𝗔𝗧𝗦 ⚔️", file=AYU, buttons=buttons)
 
 @X1.on(events.NewMessage(incoming=True, pattern=r"\%sbroadcast(?: |$)(.*)" % hl))
 async def broadcast(event):
