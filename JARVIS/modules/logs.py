@@ -1,6 +1,3 @@
-## Copy Paster Must Give Credit...
-## @JARVIS_V2
-
 import asyncio
 import heroku3
 from pymongo import MongoClient
@@ -117,18 +114,25 @@ async def callback(event):
 async def broadcast(event):
     if event.sender_id == OWNER_ID:
         reply = await event.get_reply_message()
-        message = event.pattern_match.group(1) or (reply and reply.text)
+        message = event.pattern_match.group(1)
 
-        if not message:
+        if not message and not reply:
             await event.reply("ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ ᴏʀ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ.")
             return
         
         users = stats_collection.find({'type': 'user'})
         groups = stats_collection.find({'type': 'group'})
-        
+
+        user_count = 0
+        group_count = 0
+
         for user in users:
             try:
-                await X1.send_message(user['id'], message)
+                if reply:
+                    await X1.send_message(user['id'], message or reply.text, file=reply.media)
+                else:
+                    await X1.send_message(user['id'], message)
+                user_count += 1
             except ForbiddenError:
                 pass  # Ignore if the bot is blocked
             except Exception as e:
@@ -136,12 +140,16 @@ async def broadcast(event):
         
         for group in groups:
             try:
-                await X1.send_message(group['id'], message)
+                if reply:
+                    await X1.send_message(group['id'], message or reply.text, file=reply.media)
+                else:
+                    await X1.send_message(group['id'], message)
+                group_count += 1
             except ForbiddenError:
                 pass  # Ignore if the bot is removed from the group
             except Exception as e:
                 print(f"Error sending message to {group['id']}: {str(e)}")
         
-        await event.reply("ʙʀᴏᴀᴅᴄᴀsᴛ ʜᴀs ʙᴇᴇɴ ᴄᴏᴍᴘʟᴇᴛᴇᴅ.")
+        await event.reply(f"ʙʀᴏᴀᴅᴄᴀsᴛ ʜᴀs ʙᴇᴇɴ ᴄᴏᴍᴘʟᴇᴛᴇᴅ.\n\nᴍᴇssᴀɢᴇ sᴇɴᴛ ᴛᴏ {user_count} ᴜsᴇʀs ᴀɴᴅ {group_count} ɢʀᴏᴜᴘs.")
     else:
         await event.reply("ᴏɴʟʏ ᴊᴀʀᴠɪs ᴄᴀɴ ᴘᴇʀғᴏʀᴍ ᴛʜɪs ᴀᴄᴛɪᴏɴ.")
